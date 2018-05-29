@@ -1,0 +1,36 @@
+{
+  "name": "create-whisk-action",
+  "version": "0.0.1",
+  "description": "Node package to automate the repetitive tasks of creating a OpenWhisk action",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/macdonst/create-whisk-action.git"
+  },
+  "keywords": [
+    "node",
+    "openwhisk",
+    "javascript"
+  ],
+  "author": "Simon MacDonald",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/macdonst/create-whisk-action/issues"
+  },
+  "bin": {
+    "create-whisk-action": "./index.js"
+  },
+  "homepage": "https://github.com/macdonst/create-whisk-action#readme",
+  "dependencies": {
+    "chalk": "^2.4.1",
+    "commander": "^2.15.1",
+    "cross-spawn": "^6.0.5",
+    "dns": "^0.2.2",
+    "envinfo": "^5.8.1",
+    "fs-extra": "^6.0.1",
+    "validate-npm-package-name": "^3.0.0"
+  }
+}
