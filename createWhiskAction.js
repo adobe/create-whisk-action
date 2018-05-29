@@ -79,7 +79,7 @@ function createAction(name, useNpm) {
     main: 'dist/bundle.js',
     scripts: {
       build: 'webpack --config config/webpack.config.js --mode production',
-      deploy: 'wsk action update my-action dist/bundle.js'
+      deploy: `wsk action update ${appName} dist/bundle.js`
     }
   };
   fs.writeFileSync(
@@ -292,7 +292,11 @@ function run(root, appName, originalDirectory) {
     .then(info => {
       const isOnline = info.isOnline;
       const packageName = info.packageName;
-      console.log(`Installing ${chalk.cyan('webpack')}...`);
+      console.log(
+        `Installing ${chalk.cyan('webpack')}, ${chalk.cyan(
+          'webpack-command'
+        )}...`
+      );
       console.log();
 
       return install(root, allDependencies, isOnline).then(() => packageName);
