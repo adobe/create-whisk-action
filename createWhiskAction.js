@@ -301,6 +301,21 @@ function run(root, appName, originalDirectory) {
 
       return install(root, allDependencies, isOnline).then(() => packageName);
     })
+    .then(() => {
+      console.log();
+      console.log(
+        `Success! Created ${chalk.green(appName)} at ${chalk.green(root)}`
+      );
+      console.log('Inside that directory, you can run several commands:');
+      console.log();
+      console.log(chalk.cyan('  npm run build'));
+      console.log('    Bundles the app into static files for production.');
+      console.log();
+      console.log(chalk.cyan('  npm run deploy'));
+      console.log('    Deploys the action to OpenWhisk.');
+      console.log();
+      console.log('Happy hacking!');
+    })
     .catch(reason => {
       console.log();
       console.log('Aborting installation.');
