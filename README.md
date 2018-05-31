@@ -5,8 +5,7 @@ Create OpenWhisk actions with no build configuration.
 ## Quick Overview
 
 ```
-npm install -g create-whisk-action
-create-whisk-action my-action
+npx create-whisk-action my-action
 cd my-action
 ```
 
@@ -28,7 +27,7 @@ You’ll need to have Node >= 6 on your local development machine (but it’s no
 To create a new action, run a the command:
 
 ```
-create-whisk-action my-action
+npx create-whisk-action my-action
 ```
 
 It will create a directory called my-action inside the current folder.
