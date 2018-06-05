@@ -61,6 +61,9 @@ function createAction(name, useNpm) {
   const root = path.resolve(name);
   const appName = path.basename(root);
 
+  console.log(root);
+  console.log(__dirname);
+
   checkAppName(name);
   fs.ensureDirSync(name);
 
@@ -88,28 +91,17 @@ function createAction(name, useNpm) {
   );
 
   // write index.js file
-  const indexJs = `function main(args) {
-    return {payload: 'Hello world'};
-}
-global.main = main;`;
-  fs.writeFileSync(path.join(root, 'index.js'), indexJs + os.EOL);
+  fs.copySync(
+    path.join(__dirname + '/template/index.js'),
+    path.join(root, 'index.js')
+  );
 
   // write webpack config
   const webpackConfigFolder = path.resolve(name, 'config');
   fs.ensureDirSync(webpackConfigFolder);
-
-  const webpackConfig = `var path = require('path');
-module.exports = {
-entry: './index.js',
-output: {
-    path: path.resolve(__dirname, '..', 'dist'),
-    filename: 'bundle.js'
-},
-target: 'node'
-};`;
-  fs.writeFileSync(
-    path.join(webpackConfigFolder, 'webpack.config.js'),
-    webpackConfig + os.EOL
+  fs.copySync(
+    path.join(__dirname, 'template', 'webpack.config.js'),
+    path.join(root, 'config', 'webpack.config.js')
   );
 
   // install npm dependencies
