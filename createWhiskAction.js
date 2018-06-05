@@ -61,9 +61,6 @@ function createAction(name, useNpm) {
   const root = path.resolve(name);
   const appName = path.basename(root);
 
-  console.log(root);
-  console.log(__dirname);
-
   checkAppName(name);
   fs.ensureDirSync(name);
 
