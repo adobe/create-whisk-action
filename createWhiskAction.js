@@ -330,7 +330,13 @@ function run(root, appName, originalDirectory) {
       console.log();
 
       // On 'exit' we will delete these files from target directory.
-      const knownGeneratedFiles = ['package.json', 'node_modules'];
+      const knownGeneratedFiles = [
+        'package.json',
+        'package-lock.json',
+        'node_modules',
+        'config',
+        'src'
+      ];
       const currentFiles = fs.readdirSync(path.join(root));
       currentFiles.forEach(file => {
         knownGeneratedFiles.forEach(fileToMatch => {
