@@ -99,9 +99,11 @@ function createAction(name, useNpm) {
   );
 
   // write index.js file
+  const srcFolder = path.resolve(name, 'src');
+  fs.ensureDirSync(srcFolder);
   fs.copySync(
     path.join(__dirname + '/template/index.js'),
-    path.join(root, 'index.js')
+    path.join(srcFolder, 'index.js')
   );
 
   // write webpack config
@@ -109,7 +111,7 @@ function createAction(name, useNpm) {
   fs.ensureDirSync(webpackConfigFolder);
   fs.copySync(
     path.join(__dirname, 'template', 'webpack.config.js'),
-    path.join(root, 'config', 'webpack.config.js')
+    path.join(webpackConfigFolder, 'webpack.config.js')
   );
 
   // install npm dependencies
