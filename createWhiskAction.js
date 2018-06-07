@@ -42,6 +42,7 @@ const program = new commander.Command(packageJson.name)
   .option('--verbose', 'print additional logs')
   .option('--info', 'print environment debug info')
   .option('--use-npm')
+  .option('--web', 'make it a web action')
   .allowUnknownOption()
   .on('--help', () => {
     console.log(`    Only ${chalk.green('<project-directory>')} is required.`);
@@ -66,9 +67,12 @@ if (typeof projectName === 'undefined') {
   process.exit(1);
 }
 
-createAction(projectName);
+let useWeb = false;
+if (program.web) useWeb = true;
 
-function createAction(name, useNpm) {
+createAction(projectName, useWeb);
+
+function createAction(name, useWeb) {
   const root = path.resolve(name);
   const appName = path.basename(root);
 
@@ -83,6 +87,7 @@ function createAction(name, useNpm) {
   console.log();
 
   // Create package.json file
+  const webDeploy = useWeb ? '--web true' : '';
   const packageJson = {
     name: appName,
     version: '0.1.0',
@@ -90,7 +95,7 @@ function createAction(name, useNpm) {
     main: 'dist/bundle.js',
     scripts: {
       build: 'webpack --config config/webpack.config.js --mode production',
-      deploy: `wsk action update ${appName} dist/bundle.js`
+      deploy: `wsk action update ${appName} dist/bundle.js ${webDeploy}`
     }
   };
   fs.writeFileSync(
@@ -100,9 +105,10 @@ function createAction(name, useNpm) {
 
   // write index.js file
   const srcFolder = path.resolve(name, 'src');
+  const srcFile = useWeb ? 'index.web.js' : 'index.js';
   fs.ensureDirSync(srcFolder);
   fs.copySync(
-    path.join(__dirname + '/template/index.js'),
+    path.join(__dirname, 'template', srcFile),
     path.join(srcFolder, 'index.js')
   );
 

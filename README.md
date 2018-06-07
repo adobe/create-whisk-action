@@ -30,6 +30,12 @@ To create a new action, run a the command:
 npx create-whisk-action my-action
 ```
 
+To create a web action, add the `--web` option.
+
+```
+npx create-whisk-action my-action --web
+```
+
 It will create a directory called my-action inside the current folder.
 Inside that directory, it will generate the initial project structure and install the transitive dependencies:
 
