@@ -43,13 +43,14 @@ Inside that directory, it will generate the initial project structure and instal
 my-action
 ├── config
 │   └── webpack.config.js
-├── index.js
 ├── node_modules
+├── src
+│   └── index.js
 ├── package-lock.json
 └── package.json
 ```
 
-No configuration or complicated folder structures, just the files you need to build your app.
+No configuration or complicated folder structures, just the files you need to build your action.
 
 Once the installation is done, you can open your project folder:
 
