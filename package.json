@@ -1,14 +1,14 @@
 {
   "name": "create-whisk-action",
   "version": "0.0.1",
-  "description": "Node package to automate the repetitive tasks of creating a OpenWhisk action",
+  "description": "Node package to automate the repetitive tasks of creating an OpenWhisk action",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/macdonst/create-whisk-action.git"
+    "url": "git+https://git.corp.adobe.com/smacdona/create-whisk-action.git"
   },
   "keywords": [
     "node",
@@ -18,12 +18,12 @@
   "author": "Simon MacDonald",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/macdonst/create-whisk-action/issues"
+    "url": "https://git.corp.adobe.com/smacdona/create-whisk-action/issues"
   },
   "bin": {
     "create-whisk-action": "./index.js"
   },
-  "homepage": "https://github.com/macdonst/create-whisk-action#readme",
+  "homepage": "https://git.corp.adobe.com/smacdona/create-whisk-action#readme",
   "dependencies": {
     "chalk": "^2.4.1",
     "commander": "^2.15.1",
