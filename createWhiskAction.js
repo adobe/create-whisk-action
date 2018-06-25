@@ -31,13 +31,19 @@ const errorLogFilePatterns = [
 ];
 
 let projectName;
+let packageName;
 
 const program = new commander.Command(packageJson.name)
   .version(packageJson.version, '-v, --version')
   .arguments('<project-directory>')
   .usage(`${chalk.green('<project-directory>')} [options]`)
   .action(name => {
-    projectName = name;
+    if (name.includes('/')) {
+      [packageName, projectName] = name.split('/');
+    } else {
+      packageName = null;
+      projectName = name;
+    }
   })
   .option('--verbose', 'print additional logs')
   .option('--info', 'print environment debug info')
@@ -70,16 +76,32 @@ if (typeof projectName === 'undefined') {
 let useWeb = false;
 if (program.web) useWeb = true;
 
-createAction(projectName, useWeb);
+createAction(projectName, packageName, useWeb);
 
-function createAction(name, useWeb) {
+function createAction(name, packageName, useWeb) {
   const root = path.resolve(name);
   const appName = path.basename(root);
+  const actionName = packageName === null ? name : `${packageName}/${name}`;
 
-  checkAppName(name);
-  fs.ensureDirSync(name);
+  packageExists(packageName).then(exists => {
+    if (exists) {
+      console.log(
+        `OpenWhisk package ${chalk.green(packageName)} already exists.`
+      );
+      completeActionSetup(root, appName, actionName, useWeb);
+    } else {
+      createPackage(packageName).then(() =>
+        completeActionSetup(root, appName, actionName, useWeb)
+      );
+    }
+  });
+}
 
-  if (!isSafeToCreateProjectIn(root, name)) {
+function completeActionSetup(root, appName, actionName, useWeb) {
+  checkAppName(appName);
+  fs.ensureDirSync(appName);
+
+  if (!isSafeToCreateProjectIn(root, appName)) {
     process.exit(1);
   }
 
@@ -95,7 +117,7 @@ function createAction(name, useWeb) {
     main: 'dist/bundle.js',
     scripts: {
       build: 'webpack --config config/webpack.config.js --mode production',
-      deploy: `wsk action update ${appName} dist/bundle.js ${webDeploy}`
+      deploy: `wsk action update ${actionName} dist/bundle.js ${webDeploy}`
     }
   };
   fs.writeFileSync(
@@ -104,7 +126,7 @@ function createAction(name, useWeb) {
   );
 
   // write index.js file
-  const srcFolder = path.resolve(name, 'src');
+  const srcFolder = path.resolve(appName, 'src');
   const srcFile = useWeb ? 'index.web.js' : 'index.js';
   fs.ensureDirSync(srcFolder);
   fs.copySync(
@@ -113,7 +135,7 @@ function createAction(name, useWeb) {
   );
 
   // write webpack config
-  const webpackConfigFolder = path.resolve(name, 'config');
+  const webpackConfigFolder = path.resolve(appName, 'config');
   fs.ensureDirSync(webpackConfigFolder);
   fs.copySync(
     path.join(__dirname, 'template', 'webpack.config.js'),
@@ -128,6 +150,52 @@ function createAction(name, useWeb) {
   }
 
   run(root, appName, originalDirectory);
+}
+
+function packageExists(name) {
+  return new Promise((resolve, reject) => {
+    console.log(`Checking for OpenWhisk package ${chalk.green(name)}.`);
+    console.log();
+    let command;
+    let args;
+    command = 'wsk';
+    args = ['package', 'get', `${name}`];
+
+    const child = spawn(command, args);
+    child.on('close', code => {
+      if (code !== 0) {
+        resolve(false);
+        return;
+      }
+      resolve(true);
+    });
+  });
+}
+
+function createPackage(name) {
+  return new Promise((resolve, reject) => {
+    console.log(`Creating a new OpenWhisk package ${chalk.green(name)}.`);
+    console.log();
+    let command;
+    let args;
+    command = 'wsk';
+    args = ['package', 'create', `${name}`];
+
+    const child = spawn(command, args);
+    child.on('close', code => {
+      if (code !== 0) {
+        reject({
+          command: `${command} ${args.join(' ')}`
+        });
+        return;
+      }
+      console.log(
+        `Successfully created a new OpenWhisk package ${chalk.green(name)}.`
+      );
+      console.log();
+      resolve();
+    });
+  });
 }
 
 function checkAppName(appName) {
