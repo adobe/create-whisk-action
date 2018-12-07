@@ -1,5 +1,7 @@
 # Create Whisk Action
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/adobe/create-whisk-action.svg)](https://greenkeeper.io/)
+
 Create OpenWhisk actions with no build configuration.
 
 ## Quick Overview
